@@ -4,10 +4,12 @@ const dotenv = require("dotenv").config();
 const morgan = require("morgan");
 const connectDB = require("./config/db");
 
+connectDB();
+
 app.use(express.json());
 app.use(morgan("dev"));
 
-connectDB();
+app.use("/api/v1/auth", require("./routes/authRoute"));
 
 app.get("/", function (req, res) {
   res.send("Ecommerce app");
