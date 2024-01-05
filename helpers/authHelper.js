@@ -1,16 +1,16 @@
 const bcrypt = require("bcrypt");
 
-export const hashPassword = async (password) => {
+const hashPassword = async (password) => {
   try {
     const saltRounds = 10;
-    const hash = bcrypt.hashSync(myPlaintextPassword, saltRounds);
+    const hash = bcrypt.hashSync(password, saltRounds);
     return hash;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const comparePassword = async (password, hashedPassword) => {
+const comparePassword = async (password, hashedPassword) => {
   try {
     const cmp = bcrypt.compareSync(myPlaintextPassword, hash);
     return cmp;
@@ -18,3 +18,5 @@ export const comparePassword = async (password, hashedPassword) => {
     console.log(error);
   }
 };
+
+module.exports = { hashPassword, comparePassword };
