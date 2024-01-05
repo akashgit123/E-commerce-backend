@@ -19,6 +19,15 @@ class Validation {
       .withMessage("Phone number is required"),
     body("address").notEmpty().withMessage("Address is required"),
   ];
+
+  static loginUser = [
+    body("email")
+      .notEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Enter valid email"),
+    body("password").notEmpty().withMessage("Password is required"),
+  ];
 }
 
 module.exports = Validation;

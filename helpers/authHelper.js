@@ -12,7 +12,7 @@ const hashPassword = async (password) => {
 
 const comparePassword = async (password, hashedPassword) => {
   try {
-    const cmp = bcrypt.compareSync(myPlaintextPassword, hash);
+    const cmp = bcrypt.compareSync(password, hashedPassword);
     return cmp;
   } catch (error) {
     console.log(error);
