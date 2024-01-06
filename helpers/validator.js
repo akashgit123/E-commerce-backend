@@ -13,10 +13,7 @@ class Validation {
       .withMessage("Password is required")
       .isLength({ min: 5 })
       .withMessage("Must be minimum 5 characters"),
-    body("phone")
-      .isNumeric()
-      .notEmpty()
-      .withMessage("Phone number is required"),
+    body("phone").notEmpty().withMessage("Phone number is required"),
     body("address").notEmpty().withMessage("Address is required"),
   ];
 

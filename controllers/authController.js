@@ -7,14 +7,14 @@ const { hashPassword, comparePassword } = require("../helpers/authHelper");
 const registerUser = async (req, res) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
-    return res.send({ errors: result.array() });
+    return res.status(400).json({ message: result.array()[0] });
   }
   try {
     const { name, email, password, address, phone } = req.body;
     const userExists = await userModel.findOne({ email });
     if (userExists) {
       return res.status(200).json({
-        success: true,
+        success: false,
         message: "User already exists",
       });
     }
@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User Registered successfully",
-      user,
+      // user,
     });
   } catch (error) {
     console.log(error);
