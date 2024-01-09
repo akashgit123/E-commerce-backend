@@ -44,14 +44,14 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
-    return res.send({ errors: result.array() });
+    return res.send({ errors: result.array()[0] });
   }
   try {
     const { email, password } = req.body;
     const userExists = await userModel.findOne({ email });
     if (!userExists) {
       return res
-        .status(401)
+        .status(200)
         .json({ success: false, message: "Email not exists" });
     }
     const isValidPassword = await comparePassword(
@@ -60,9 +60,16 @@ const loginUser = async (req, res) => {
     );
     if (!isValidPassword) {
       return res
-        .status(401)
+        .status(200)
         .json({ success: false, message: "Invalid credentails" });
     }
+    const user = {
+      name: userExists.name,
+      email: userExists.email,
+      phone: userExists.phone,
+      address: userExists.address,
+      role: userExists.role,
+    };
     const authToken = await jwt.sign(
       { id: userExists._id },
       process.env.JWT_SECRET,
@@ -72,7 +79,7 @@ const loginUser = async (req, res) => {
     );
     return res
       .status(200)
-      .json({ success: true, message: "Login Successful", authToken });
+      .json({ success: true, message: "Login Successful", user, authToken });
   } catch (error) {
     console.log(error);
     res.status(400).json({

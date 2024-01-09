@@ -24,7 +24,7 @@ const isAdmin = async (req, res, next) => {
     const user = await userModel.findById(req.user._id);
     if (user.role !== 1) {
       return res
-        .status(401)
+        .status(200)
         .json({ success: false, message: "Unauthorized Access" });
     }
     next();
