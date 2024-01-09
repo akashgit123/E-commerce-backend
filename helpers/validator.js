@@ -25,6 +25,10 @@ class Validation {
       .withMessage("Enter valid email"),
     body("password").notEmpty().withMessage("Password is required"),
   ];
+
+  static category = [
+    body("name").notEmpty().withMessage("Category name is required"),
+  ];
 }
 
 module.exports = Validation;

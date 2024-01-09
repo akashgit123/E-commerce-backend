@@ -12,6 +12,7 @@ app.use(morgan("dev"));
 app.use(cors());
 
 app.use("/api/v1/auth", require("./routes/authRoute"));
+app.use("/api/v1/category", require("./routes/category"));
 
 app.get("/", function (req, res) {
   res.send("Ecommerce app");
