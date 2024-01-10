@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, check } = require("express-validator");
 
 class Validation {
   static registerUser = [
@@ -28,6 +28,17 @@ class Validation {
 
   static category = [
     body("name").notEmpty().withMessage("Category name is required"),
+  ];
+
+  static product = [
+    check("name").notEmpty().withMessage("Product name is required"),
+    check("description")
+      .notEmpty()
+      .withMessage("Product description is required"),
+    check("price").notEmpty().withMessage("Product price is required"),
+    check("category").notEmpty().withMessage("Product category is required"),
+    check("quantity").notEmpty().withMessage("Product quantity is required"),
+    check("image").notEmpty().withMessage("Product image is required"),
   ];
 }
 

@@ -1,6 +1,6 @@
 const express = require("express");
 const contoller = require("../controllers/authController");
-const Validation = require("../helpers/validator");
+const Validation = require("../middlewares/validator");
 const { isLoggedIn, isAdmin } = require("../middlewares/authMiddlewares");
 const route = express.Router();
 

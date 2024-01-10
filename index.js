@@ -13,6 +13,7 @@ app.use(cors());
 
 app.use("/api/v1/auth", require("./routes/authRoute"));
 app.use("/api/v1/category", require("./routes/category"));
+app.use("/api/v1/product", require("./routes/product"));
 
 app.get("/", function (req, res) {
   res.send("Ecommerce app");

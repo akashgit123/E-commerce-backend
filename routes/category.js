@@ -1,7 +1,7 @@
 const express = require("express");
 const { isLoggedIn, isAdmin } = require("../middlewares/authMiddlewares");
 const controller = require("../controllers/category");
-const Validation = require("../helpers/validator");
+const Validation = require("../middlewares/validator");
 const route = express.Router();
 
 route.post(
