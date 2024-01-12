@@ -34,5 +34,8 @@ route.get("/all-products", controller.allProducts);
 route.get("/get-product/:slug", controller.getProduct);
 route.get("/product-image/:id", controller.getProductImage);
 route.post("/filter-products", controller.productFilter);
+route.get("/product-count", controller.productCount);
+route.get("/product-page/:page", controller.productListController);
+route.get("/search/:keyword", controller.searchProduct);
 
 module.exports = route;

@@ -161,6 +161,73 @@ const productFilter = async (req, res) => {
   }
 };
 
+const productCount = async (req, res) => {
+  try {
+    const totalCount = await productModel.find({}).estimatedDocumentCount();
+    res.status(200).json({
+      success: true,
+      totalCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to  Filter Product",
+      error,
+    });
+  }
+};
+
+const productListController = async (req, res) => {
+  try {
+    const perPage = 3;
+    const pageNo = req.params.page ? req.params.page : 1;
+    const products = await productModel
+      .find({})
+      .select("-image")
+      .skip((pageNo - 1) * perPage)
+      .limit(perPage)
+      .sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      page: pageNo,
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to  Filter Product",
+      error,
+    });
+  }
+};
+
+const searchProduct = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+    const products = await productModel
+      .find({
+        $or: [
+          { name: { $regex: keyword, $options: "i" } },
+          { description: { $regex: keyword, $options: "i" } },
+        ],
+      })
+      .select("-image");
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to  Search Product",
+      error,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   allProducts,
@@ -169,4 +236,7 @@ module.exports = {
   deleteProduct,
   updateProduct,
   productFilter,
+  productCount,
+  productListController,
+  searchProduct,
 };
