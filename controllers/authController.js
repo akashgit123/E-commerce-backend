@@ -74,7 +74,7 @@ const loginUser = async (req, res) => {
       { id: userExists._id },
       process.env.JWT_SECRET,
       {
-        expiresIn: "5h",
+        expiresIn: "2d",
       }
     );
     return res

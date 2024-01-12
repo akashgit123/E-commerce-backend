@@ -45,7 +45,7 @@ const updateProduct = async (req, res) => {
     await product.save();
     return res.status(201).json({
       success: true,
-      message: "New Product Added Successfully",
+      message: "Product Updated Successfully",
       product,
     });
   } catch (error) {
@@ -139,6 +139,28 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const productFilter = async (req, res) => {
+  try {
+    const { checked, radio } = req.body;
+    let args = {};
+    if (checked.length > 0) args.category = checked;
+    if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
+    const products = await productModel.find(args);
+    return res.status(200).json({
+      success: true,
+      message: "Filtered Product",
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to  Filter Product",
+      error,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   allProducts,
@@ -146,4 +168,5 @@ module.exports = {
   getProductImage,
   deleteProduct,
   updateProduct,
+  productFilter,
 };

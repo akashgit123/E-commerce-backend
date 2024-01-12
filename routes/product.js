@@ -33,5 +33,6 @@ route.delete(
 route.get("/all-products", controller.allProducts);
 route.get("/get-product/:slug", controller.getProduct);
 route.get("/product-image/:id", controller.getProductImage);
+route.post("/filter-products", controller.productFilter);
 
 module.exports = route;
