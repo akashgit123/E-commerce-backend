@@ -228,6 +228,31 @@ const searchProduct = async (req, res) => {
   }
 };
 
+const similarProduct = async (req, res) => {
+  try {
+    const { pid, cid } = req.params;
+    const similarProducts = await productModel
+      .find({
+        category: cid,
+        _id: { $ne: pid },
+      })
+      .select("-image")
+      .populate("category")
+      .limit(3);
+    res.status(200).json({
+      success: true,
+      similarProducts,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to  Find SimilarProduct",
+      error,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   allProducts,
@@ -239,4 +264,5 @@ module.exports = {
   productCount,
   productListController,
   searchProduct,
+  similarProduct,
 };

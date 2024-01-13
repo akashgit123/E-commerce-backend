@@ -37,5 +37,6 @@ route.post("/filter-products", controller.productFilter);
 route.get("/product-count", controller.productCount);
 route.get("/product-page/:page", controller.productListController);
 route.get("/search/:keyword", controller.searchProduct);
+route.get("/similar-product/:pid/:cid", controller.similarProduct);
 
 module.exports = route;
