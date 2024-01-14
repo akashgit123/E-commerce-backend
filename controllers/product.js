@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const productModel = require("../models/product");
+const categoryModel = require("../models/category");
 const slugify = require("slugify");
 const fs = require("fs");
 
@@ -253,6 +254,31 @@ const similarProduct = async (req, res) => {
   }
 };
 
+const categoryWiseProducts = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const category = await categoryModel.findOne({ slug });
+    const products = await productModel
+      .find({
+        category,
+      })
+      .select("-image")
+      .populate("category");
+    res.status(200).json({
+      success: true,
+      products,
+      category,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to  Find Categpry wise Product",
+      error,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   allProducts,
@@ -265,4 +291,5 @@ module.exports = {
   productListController,
   searchProduct,
   similarProduct,
+  categoryWiseProducts,
 };

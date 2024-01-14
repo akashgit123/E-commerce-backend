@@ -6,6 +6,12 @@ const route = express.Router();
 
 route.post("/register", Validation.registerUser, contoller.registerUser);
 route.post("/login", Validation.loginUser, contoller.loginUser);
+route.put(
+  "/profile",
+  isLoggedIn,
+  Validation.registerUser,
+  contoller.updateProfile
+);
 
 // protected route
 route.get("/user-auth", isLoggedIn, (req, res) => {

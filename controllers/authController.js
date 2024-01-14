@@ -90,4 +90,36 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const updateProfile = async (req, res) => {
+  try {
+    const { email, name, address, phone } = req.body;
+    const user = await userModel.findById(req.user._id);
+    const updateUser = await userModel
+      .findByIdAndUpdate(
+        user._id,
+        {
+          email: email || user.email,
+          name: name || user.name,
+          phone: phone || user.phone,
+          address: address || user.address,
+        },
+        { new: true }
+      )
+      .select(["-password", "-createdAt", "-updatedAt"]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile Updated Successfully",
+      updateUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      success: false,
+      message: "Failed to Update Profile",
+      error,
+    });
+  }
+};
+
+module.exports = { registerUser, loginUser, updateProfile };
