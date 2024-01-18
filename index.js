@@ -15,6 +15,7 @@ app.use("/api/v1/auth", require("./routes/authRoute"));
 app.use("/api/v1/category", require("./routes/category"));
 app.use("/api/v1/product", require("./routes/product"));
 app.use("/api/v1/payment", require("./routes/payment"));
+app.use("/api/v1/orders", require("./routes/orders"));
 
 app.get("/", function (req, res) {
   res.send("Ecommerce app");
