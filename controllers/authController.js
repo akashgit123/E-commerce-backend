@@ -2,7 +2,12 @@ const { validationResult } = require("express-validator");
 const dotenv = require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/user");
-const { hashPassword, comparePassword } = require("../helpers/authHelper");
+const {
+  hashPassword,
+  comparePassword,
+  forgotPasswordToken,
+} = require("../helpers/authHelper");
+const { sendMail } = require("../service/mail");
 
 const registerUser = async (req, res) => {
   const result = validationResult(req);
@@ -122,4 +127,69 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, updateProfile };
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const userExists = await userModel.findOne({ email });
+    if (!userExists) {
+      return res.status(400).json({ message: "User does not exist" });
+    }
+    const token = await forgotPasswordToken(userExists._id, email);
+    const sent = await sendMail(
+      email,
+      "Forgot Password",
+      userExists.name,
+      token
+    );
+    if (!sent) {
+      return res.status(400).json({ message: "Something went wrong" });
+    }
+    return res.status(200).json({ message: "Please check your email" });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ errorMessage: error });
+  }
+};
+
+const updatePassword = async (req, res) => {
+  try {
+    const { email, password, cpassword } = req.body;
+    const { token } = req.params;
+
+    const secret = process.env.JWT_SECRET;
+    const { userId } = await jwt.verify(token, secret);
+    if (!userId) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    const userExists = await userModel.findById(userId);
+    if (!userExists) {
+      return res.status(400).json({ message: "User does not exist" });
+    }
+    if (password !== cpassword) {
+      return res
+        .status(400)
+        .json({ message: "Password and confirm password not matched" });
+    }
+
+    const hash = await hashPassword(password);
+    const updatePassword = await userModel.findByIdAndUpdate(userId, {
+      $set: { password: hash },
+    });
+    if (!updatePassword) {
+      return res.status(400).json({ message: "Failed to update password" });
+    }
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ errorMessage: error });
+  }
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  updateProfile,
+  forgotPassword,
+  updatePassword,
+};

@@ -1,17 +1,19 @@
 const express = require("express");
-const contoller = require("../controllers/authController");
+const controller = require("../controllers/authController");
 const Validation = require("../middlewares/validator");
 const { isLoggedIn, isAdmin } = require("../middlewares/authMiddlewares");
 const route = express.Router();
 
-route.post("/register", Validation.registerUser, contoller.registerUser);
-route.post("/login", Validation.loginUser, contoller.loginUser);
+route.post("/register", Validation.registerUser, controller.registerUser);
+route.post("/login", Validation.loginUser, controller.loginUser);
 route.put(
   "/profile",
   isLoggedIn,
   Validation.registerUser,
-  contoller.updateProfile
+  controller.updateProfile
 );
+route.post("/forgot-password", controller.forgotPassword);
+route.put("/update-password/:token", controller.updatePassword);
 
 // protected route
 route.get("/user-auth", isLoggedIn, (req, res) => {

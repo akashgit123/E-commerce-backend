@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv").config();
 
 const hashPassword = async (password) => {
   try {
@@ -19,4 +21,19 @@ const comparePassword = async (password, hashedPassword) => {
   }
 };
 
-module.exports = { hashPassword, comparePassword };
+const forgotPasswordToken = async (id, email) => {
+  const secret = process.env.JWT_SECRET;
+  const token = await jwt.sign(
+    {
+      userId: id,
+      email: email,
+    },
+    secret,
+    {
+      expiresIn: "1h",
+    }
+  );
+  return token;
+};
+
+module.exports = { hashPassword, comparePassword, forgotPasswordToken };
