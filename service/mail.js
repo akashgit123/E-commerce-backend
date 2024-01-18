@@ -12,7 +12,7 @@ async function sendMail(toEmail, subject, name, token) {
     <p>Hello ${name},  </p>
     <br/>
     You are receiving this email because you have requested the reset of a password
-    <a href='${process.env.FRONTEND_DOMAIN}/update-password?token=${token}'>Click here to update password</a>`,
+    <a href='${process.env.FRONTEND_DOMAIN}/update-password/${token}'>Click here to update password</a>`,
   });
 
   return info.messageId;

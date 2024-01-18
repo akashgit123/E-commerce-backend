@@ -132,7 +132,9 @@ const forgotPassword = async (req, res) => {
     const { email } = req.body;
     const userExists = await userModel.findOne({ email });
     if (!userExists) {
-      return res.status(400).json({ message: "User does not exist" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User does not exist" });
     }
     const token = await forgotPasswordToken(userExists._id, email);
     const sent = await sendMail(
@@ -142,29 +144,35 @@ const forgotPassword = async (req, res) => {
       token
     );
     if (!sent) {
-      return res.status(400).json({ message: "Something went wrong" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Something went wrong" });
     }
-    return res.status(200).json({ message: "Please check your email" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Please check your email" });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ errorMessage: error });
+    return res.status(400).json({ success: false, errorMessage: error });
   }
 };
 
 const updatePassword = async (req, res) => {
   try {
-    const { email, password, cpassword } = req.body;
+    const { password, cpassword } = req.body;
     const { token } = req.params;
 
     const secret = process.env.JWT_SECRET;
     const { userId } = await jwt.verify(token, secret);
     if (!userId) {
-      return res.status(400).json({ message: "Invalid token" });
+      return res.status(400).json({ success: false, message: "Invalid token" });
     }
 
     const userExists = await userModel.findById(userId);
     if (!userExists) {
-      return res.status(400).json({ message: "User does not exist" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User does not exist" });
     }
     if (password !== cpassword) {
       return res
@@ -177,12 +185,16 @@ const updatePassword = async (req, res) => {
       $set: { password: hash },
     });
     if (!updatePassword) {
-      return res.status(400).json({ message: "Failed to update password" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Failed to update password" });
     }
-    return res.status(200).json({ message: "Password updated successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Password updated successfully" });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ errorMessage: error });
+    return res.status(400).json({ success: false, errorMessage: error });
   }
 };
 
